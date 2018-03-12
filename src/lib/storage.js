@@ -294,6 +294,12 @@ class Storage {
       for (let p in self.uplinks) {
         if (self.uplinks[p].isUplinkValid(file.url)) {
           uplink = self.uplinks[p];
+          // Begin modification by rkent@caspia.org
+          if (uplink && uplink.config && uplink.config.disableFetch) {
+            readStream.emit('error', Utils.ErrorCode.get404('uplink fetch disabled, file unavailable: ' + file.url));
+            return;
+          }
+          // end modification
         }
       }
       if (uplink == null) {
